@@ -1,0 +1,190 @@
+#include <iostream>
+using namespace std;
+
+template <class T>
+class SinglyLinkedList
+{
+private:
+	class Node
+	{
+	public:
+		T data;
+		Node* nextNode;
+	};
+	Node* head;
+	Node* tail;
+public:
+
+
+	SinglyLinkedList()
+	{
+		head = nullptr;
+		tail = nullptr;
+	}
+	SinglyLinkedList(const SinglyLinkedList& obj)
+	{
+		head = obj->head;
+		tail = obj->tail;
+	}
+	~SinglyLinkedList()
+	{
+		while (head != nullptr)
+			DeleteAtStart();
+	}
+
+	//Insert elements in O(n)
+	void SortedInsert(T element)
+	{
+		Node* newNode = new Node;
+		newNode->data = element;
+		Node* ptr = head;
+		Node* previousPtr = head;
+		if (head == nullptr)		// Empty List
+		{
+			head = newNode;
+			head->nextNode = tail;
+			return;
+		}
+		else if (element < head->data)		// Element entered less than first element data
+		{
+			newNode->nextNode = head;
+			head = newNode;
+			return;
+		}
+
+		while (ptr != nullptr && element > ptr->data)		// Traversion of the Linked List
+		{
+			previousPtr = ptr;
+			ptr = ptr->nextNode;
+		}
+		newNode->nextNode = ptr;
+		previousPtr->nextNode = newNode;
+	}
+
+	void Remove(T element)
+	{
+		if (head == nullptr)
+		{
+			cout << "Empty List!" << endl;
+			return;
+		}
+		Node* ptr = head;
+		Node* previousPtr = head;
+		if (head->data == element)
+		{
+			head = head->nextNode;
+			delete ptr;
+			return;
+		}
+		while (ptr != nullptr && ptr->data != element)
+		{
+			previousPtr = ptr;
+			ptr = ptr->nextNode;
+		}
+		if (ptr != nullptr)
+		{
+			previousPtr->nextNode = ptr->nextNode;
+			delete ptr;
+		}
+		else
+			cout << "Element " << element << " not exist is linked list\n";
+	}
+
+	void DeleteAtStart()
+	{
+		if (head != nullptr && head != tail)
+		{
+			Node* temp = head;
+			head = head->nextNode;
+			delete temp;
+			if (head == nullptr)
+				tail = nullptr;
+		}
+		else if (head == tail)
+		{
+			delete head;
+			head = tail = nullptr;
+		}
+		else
+			cout << "Empty Linked List!\n";
+	}
+
+	//searching elements in O(n)
+	bool Search(T const& value)
+	{
+		if (head == nullptr && tail == nullptr)
+			cout << "Empty Linked List!\n";
+		Node* temp = head;
+		while (temp != nullptr)
+		{
+			if (temp->data == value)
+				return true;
+			temp = temp->nextNode;
+		}
+		return false;
+	}
+
+
+	void Print()
+	{
+		Node* tempPtr = head;
+		if (head == nullptr && tail == nullptr)
+			cout << "Empty Linked List!\n";
+		while (tempPtr != nullptr)
+		{
+			cout << (tempPtr->data) << ", ";
+			tempPtr = tempPtr->nextNode;
+		}
+		cout << endl;
+	}
+
+};
+
+int main()
+{
+	SinglyLinkedList<string> myList;
+	myList.SortedInsert("abc");
+	myList.Print();
+	myList.SortedInsert("aac");
+	myList.Print();
+	myList.SortedInsert("aab");
+	myList.Print();
+	myList.SortedInsert("bcd");
+	myList.Print();
+	myList.SortedInsert("aaa");
+	myList.Print();
+	myList.SortedInsert("aaaa");
+	myList.Print();
+
+	cout << "Search \"aac\": " << (myList.Search("aac")) << endl;
+	cout << "Search \"adc\": " << (myList.Search("adc")) << endl;
+
+
+	SinglyLinkedList<int> myList1;
+	myList1.SortedInsert(2);
+	myList1.Print();
+	myList1.SortedInsert(7);
+	myList1.Print();
+	myList1.SortedInsert(0);
+	myList1.Print();
+	myList1.SortedInsert(1);
+	myList1.Print();
+	myList1.SortedInsert(3);
+	myList1.Print();
+	myList1.SortedInsert(4);
+	myList1.Print();
+	cout << "Search \"4\": " << (myList1.Search(4)) << endl;
+	cout << "Search \"9\": " << (myList1.Search(9)) << endl;
+	myList1.Remove(7);
+	myList1.Print();
+	myList1.Remove(0);
+	myList1.Print();
+	myList1.Remove(4);
+	myList1.Print();
+	myList1.Remove(-1);
+	myList1.Print();
+
+
+
+	return 0;
+}
